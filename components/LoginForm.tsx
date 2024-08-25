@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -10,9 +11,68 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Github, SendHorizontal } from "lucide-react";
+import { SendHorizontal } from "lucide-react";
+import GithubLoginButton from "./GithubLoginButton";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-export default function LoginForm() {
+interface Props {
+  callbackUrl?: string;
+}
+const FormSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z
+    .string()
+    .min(6, "Password must be atleast 6 characters")
+    .max(50, "Password must be less than 50 characters"),
+});
+
+type InpuType = z.infer<typeof FormSchema>;
+
+export default function LoginForm(props: Props) {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<InpuType>({
+    resolver: zodResolver(FormSchema),
+  });
+
+  // const form = useForm<InpuType>({
+  //   defaultValues: {
+  //     email: "",
+  //     password: "",
+  //   },
+  // });
+
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<InpuType> = async (data) => {
+    try {
+      console.log({ data });
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+        // callbackUrl: "/dashboard",
+      });
+      console.log(result);
+      if (!result?.ok) {
+        toast.error(result?.error);
+        return;
+      }
+      // router.push(props.callbackUrl ? props.callbackUrl : "/dashboard");
+      router.push("/dashboard");
+    } catch (error) {
+      toast.error("Username or Email Already Exists!");
+      console.log(error);
+    }
+  };
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -23,28 +83,38 @@ export default function LoginForm() {
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                {...register("email")}
+                type="text"
+                placeholder="m@example.com"
+              />
+              <p className="text-sm text-red-500">{errors.email?.message}</p>
             </div>
-            <Input id="password" type="password" required />
-          </div>
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
-
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
+                <Link
+                  href="#"
+                  className="ml-auto inline-block text-sm underline"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+              <Input
+                {...register("password")}
+                type="password"
+                placeholder="*******"
+              />
+              <p className="text-sm text-red-500">{errors.email?.message}</p>
+            </div>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {/* Login */}
+              {isSubmitting ? "Signing in ..." : "Login"}
+            </Button>
+          </form>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
@@ -61,11 +131,7 @@ export default function LoginForm() {
           </Button> */}
 
           <div className="grid grid-cols-2 gap-6">
-            <Button variant="outline">
-              {/* <Icons.gitHub className="mr-2 h-4 w-4" /> */}
-              <Github className="mr-2 h-4 w-4" />
-              Github
-            </Button>
+            <GithubLoginButton />
             <Button variant="outline">
               {/* <Icons.google className="mr-2 h-4 w-4" /> */}
               <SendHorizontal className="mr-2 h-4 w-4" />

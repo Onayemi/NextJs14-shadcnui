@@ -14,18 +14,18 @@ model User {
   id            String    @id @default(cuid())
   firstName     String
   lastName      String
-  email         String   @unique
+  email         String    @unique
   password      String
   emailVerified DateTime? @map("email_verified")
   image         String?
   phone         String
-  role          UserRole @default(USER)
+  role          UserRole  @default(USER)
   accounts      Account[]
   sessions      Session[]
- 
-  @@map("users")
+
+  // @@map("users")
 }
- 
+
 model Account {
   id                       String  @id @default(cuid())
   userId                   String  @unique
@@ -41,32 +41,32 @@ model Account {
   session_state            String?
   refresh_token_expires_in Int?
   user                     User?   @relation(fields: [userId], references: [id])
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
- 
+
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   @@index([userId])
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@unique([identifier, token])
 }
 

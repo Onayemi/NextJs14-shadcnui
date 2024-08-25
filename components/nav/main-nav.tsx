@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { Icons } from "./icons";
+import SignOutButton from "../SignOutButton";
 // import { Icons } from "@/components/icons";
 
 export default function MainNav() {
@@ -24,10 +25,10 @@ export default function MainNav() {
           href="/docs"
           className={cn(
             "transition-colors hover:text-foreground/80",
-            pathname === "/docs" ? "text-foreground" : "text-foreground/60"
+            pathname === "/about" ? "text-foreground" : "text-foreground/60"
           )}
         >
-          Docs
+          About
         </Link>
         <Link
           href="/docs/components"
@@ -97,6 +98,18 @@ export default function MainNav() {
         >
           Colors
         </Link>
+        <Link
+          href="/login"
+          className={cn(
+            "transition-colors hover:text-foreground/80",
+            pathname?.startsWith("/login")
+              ? "text-foreground"
+              : "text-foreground/60"
+          )}
+        >
+          Login
+        </Link>
+        {/* <SignOutButton /> */}
       </nav>
     </div>
   );

@@ -31,8 +31,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { auth } from "@/auth";
+import SignOutButton from "./SignOutButton";
+import { redirect } from "next/navigation";
 
-export function Dashboard() {
+export async function Dashboard() {
+  const session = await auth();
+  console.log(session);
+  if (!session) redirect("/login");
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -105,6 +111,11 @@ export function Dashboard() {
               </CardContent>
             </Card>
           </div>
+          {session?.user ? (
+            <SignOutButton />
+          ) : (
+            <Link href={"/login"}>Login</Link>
+          )}
         </div>
       </div>
       <div className="flex flex-col">
@@ -199,6 +210,9 @@ export function Dashboard() {
             </form>
           </div>
           <DropdownMenu>
+            {session?.user?.firstName && (
+              <h2>Hello {session?.user?.lastName}</h2>
+            )}
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
                 <CircleUser className="h-5 w-5" />
@@ -212,6 +226,11 @@ export function Dashboard() {
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Logout</DropdownMenuItem>
+              {session?.user ? (
+                <SignOutButton />
+              ) : (
+                <Link href={"/login"}>Login</Link>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
