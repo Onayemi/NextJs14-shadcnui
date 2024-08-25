@@ -8,8 +8,14 @@ import bcrypt from "bcryptjs";
 // Notice this is only an object, not a full Auth.js instance
 export default {
   providers: [
-    Google,
-    GitHub,
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID,
+      clientSecret: process.env.AUTH_GITHUB_SECRET,
+    }),
     Credentials({
       name: "Credentials",
       credentials: {

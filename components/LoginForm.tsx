@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SendHorizontal } from "lucide-react";
-import GithubLoginButton from "./GithubLoginButton";
+import GithubLoginButton, { GoogleLoginButton } from "./GithubLoginButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -63,8 +63,9 @@ export default function LoginForm(props: Props) {
       });
       console.log(result);
       if (!result?.ok) {
-        toast.error(result?.error);
-        return;
+        toast.error("Incorrect credentials");
+        // toast.error(result?.error);
+        // return;
       }
       // router.push(props.callbackUrl ? props.callbackUrl : "/dashboard");
       router.push("/dashboard");
@@ -132,11 +133,11 @@ export default function LoginForm(props: Props) {
 
           <div className="grid grid-cols-2 gap-6">
             <GithubLoginButton />
-            <Button variant="outline">
-              {/* <Icons.google className="mr-2 h-4 w-4" /> */}
+            {/* <Button variant="outline">
               <SendHorizontal className="mr-2 h-4 w-4" />
               Google
-            </Button>
+            </Button> */}
+            <GoogleLoginButton />
           </div>
         </div>
         <div className="mt-4 text-center text-sm">

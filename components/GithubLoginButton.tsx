@@ -2,8 +2,27 @@
 import React from "react";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
-import { Github } from "lucide-react";
+import { Github, Mail, SendHorizontal } from "lucide-react";
 import Link from "next/link";
+
+export function GoogleLoginButton() {
+  return (
+    <Button
+      onClick={() =>
+        signIn("google", {
+          // redirect: false,
+          callbackUrl: "/dashboard",
+        })
+      }
+      variant="outline"
+    >
+      {/* <Icons.gitHub className="mr-2 h-4 w-4" /> */}
+      {/* <Mail className="mr-2 h-4 w-4" /> */}
+      <SendHorizontal className="mr-2 h-4 w-4" />
+      Google
+    </Button>
+  );
+}
 
 export default function GithubLoginButton() {
   // const { data: session } = useSession();
@@ -19,6 +38,7 @@ export default function GithubLoginButton() {
       <Button
         onClick={() =>
           signIn("github", {
+            // redirect: false,
             callbackUrl: "/dashboard",
           })
         }
