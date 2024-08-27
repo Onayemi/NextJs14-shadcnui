@@ -34,10 +34,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { auth } from "@/auth";
 import SignOutButton from "./SignOutButton";
 import { redirect } from "next/navigation";
+import { handleSignOut } from "@/app/actions/authActions";
 
 export async function Dashboard() {
   const session = await auth();
   console.log(session);
+  if (session?.user.role === "USER") redirect("/customer");
   if (!session) redirect("/login");
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -111,11 +113,6 @@ export async function Dashboard() {
               </CardContent>
             </Card>
           </div>
-          {session?.user ? (
-            <SignOutButton />
-          ) : (
-            <Link href={"/login"}>Login</Link>
-          )}
         </div>
       </div>
       <div className="flex flex-col">
@@ -225,12 +222,14 @@ export async function Dashboard() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
-              {session?.user ? (
-                <SignOutButton />
-              ) : (
-                <Link href={"/login"}>Login</Link>
-              )}
+              {/* <DropdownMenuItem>Logout</DropdownMenuItem> */}
+              <DropdownMenuItem>
+                <form action={handleSignOut}>
+                  <Button variant="default" type="submit">
+                    Sign Out
+                  </Button>
+                </form>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>

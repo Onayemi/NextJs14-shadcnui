@@ -18,7 +18,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import validator from "validator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerUser } from "@/lib/actions/authActions";
+import { registerUser } from "@/app/actions/authActions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 

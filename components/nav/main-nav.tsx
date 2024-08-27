@@ -7,9 +7,13 @@ import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { Icons } from "./icons";
 import SignOutButton from "../SignOutButton";
+import { useSession } from "next-auth/react";
+import { Button } from "../ui/button";
 // import { Icons } from "@/components/icons";
 
 export default function MainNav() {
+  const { data: session } = useSession();
+  console.log(session);
   const pathname = usePathname();
 
   return (
@@ -77,15 +81,15 @@ export default function MainNav() {
           Themes
         </Link>
         <Link
-          href="/examples"
+          href="/concepts"
           className={cn(
             "transition-colors hover:text-foreground/80",
-            pathname?.startsWith("/examples")
+            pathname?.startsWith("/concepts")
               ? "text-foreground"
               : "text-foreground/60"
           )}
         >
-          Examples
+          Concepts
         </Link>
         <Link
           href="/colors"
@@ -109,6 +113,7 @@ export default function MainNav() {
         >
           Login
         </Link>
+
         {/* <SignOutButton /> */}
       </nav>
     </div>
