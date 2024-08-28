@@ -38,9 +38,9 @@ import { handleSignOut } from "@/app/actions/authActions";
 
 export async function Dashboard() {
   const session = await auth();
-  console.log(session);
-  if (session?.user.role === "USER") redirect("/customer");
-  if (!session) redirect("/login");
+  // console.log(session);
+  // if (session?.user.role === "USER") redirect("/customer");
+  // if (!session) redirect("/login");
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
